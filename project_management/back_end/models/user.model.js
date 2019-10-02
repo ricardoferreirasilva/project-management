@@ -25,5 +25,5 @@ UserSchema.methods.validPassword = function(password) {
     return this.hash === hash;
 };
 
-    
+// crypto.randomBytes(64).toString('hex');
 module.exports = mongoose.model('User', UserSchema);
