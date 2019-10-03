@@ -18,6 +18,7 @@ var authToken = function (req, res, next) {
     })
   }
 
+// Refactor back into GET with the token as a Bearer.
 router.route("/").post(authToken,(req, res) => {
     User.findOne({token:req.body.token}) // all
     .populate('projects')
