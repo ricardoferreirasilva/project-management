@@ -22,4 +22,15 @@ router.route("/create").post(authenticateToken, (req, res) => {
     }).catch(() => res.status(400).json("Error: " + err));
 });
 
+// Is this secure? Assuming that an user only knows the ids of his tasks.
+router.route("/:id/complete").post(authenticateToken, (req, res) => {
+    let taskID = req.params.id;
+    Task.findById(taskID, function (err, task) {
+        task.completeTask()
+        task.save().then(()=>res.json(task));
+    
+    });
+});
+
+
 module.exports = router

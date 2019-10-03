@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import moment from "moment"
 import axios from "axios"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, Button, ButtonToolbar, Form, InputGroup, FormControl } from 'react-bootstrap';
+import { Card, Button, Tooltip, Form, InputGroup, FormControl, OverlayTrigger } from 'react-bootstrap';
 
 class ProjectInfo extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
 
         this.submitTask = this.submitTask.bind(this);
+        this.completeTask = this.completeTask.bind(this);
         this.onChangeTaskDescription = this.onChangeTaskDescription.bind(this);
 
         this.state = {
@@ -17,23 +19,41 @@ class ProjectInfo extends Component {
     onChangeTaskDescription(e) {
         this.setState({ newTaskDescription: e.target.value })
     }
-    submitTask(event){
+    submitTask(event) {
         let description = this.state.newTaskDescription;
-        this.setState({newTaskDescription: ""});
+        this.setState({ newTaskDescription: "" });
         let token = localStorage.getItem("token");
         axios.post("http://127.0.0.1:5000/tasks/create",
-            {description: description,projectId:this.props.project._id},
+            { description: description, projectId: this.props.project._id },
             {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
             }).then((res) => {
-               if(res.status == 200) this.props.getProjects();
+                if (res.status == 200) this.props.getProjects();
 
             }).catch((err) => {
                 console.log(err)
                 console.error("Could not create project.")
-        });
+            });
+    }
+
+    completeTask(event) {
+        let taskId = event.target.id;
+        let token = localStorage.getItem("token");
+        axios.post("http://127.0.0.1:5000/tasks/" + taskId + "/complete",
+            {},
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }).then((res) => {
+                if (res.status == 200) this.props.getProjects();
+
+            }).catch((err) => {
+                console.log(err)
+                console.error("Could not create project.")
+            });
     }
     render() {
         const style = {
@@ -42,20 +62,34 @@ class ProjectInfo extends Component {
             margin: "25px",
             textAlign: "left"
         };
-        
-        let completedTasks=[],ongoingTasks =[];
-        for(let task of this.props.project.tasks)
-        {
-            if(task.completed) completedTasks.push(task)
+
+        const completedStyle = {
+            color: 'grey',
+            textDecorationLine: 'line-through',
+            display: "inline-block",
+            marginRight:"50px"
+        };
+
+        let completedTasks = [], ongoingTasks = [];
+        for (let task of this.props.project.tasks) {
+            if (task.completed) completedTasks.push(task)
             else ongoingTasks.push(task);
         }
 
         const renderCompletedTasks = completedTasks.map((task, key) =>
-            <Form.Check key={task._id} type="checkbox" label={task.description} />
+            <OverlayTrigger key={task._id} placement={"right"}
+                overlay={
+                    <Tooltip id={`tooltip-${"right"}`} style="">
+                        Finished on {moment(task.completionDate).format('YYYY-DD-MM')}.
+                    </Tooltip>
+                }>
+                <p key={task._id} style={completedStyle} >{task.description}</p>
+            </OverlayTrigger>
+
         );
 
         const renderOngoingTasks = ongoingTasks.map((task, key) =>
-            <Form.Check key={task._id} type="checkbox" label={task.description} />
+            <Form.Check id={task._id} key={task._id} type="checkbox" label={task.description} onChange={this.completeTask} />
         );
 
         return (
@@ -71,12 +105,11 @@ class ProjectInfo extends Component {
                     </Form.Group>
 
                     <h6>Completed tasks: </h6>
-                    <Form.Group controlId="activeTasks">
+                    <div style={completedStyle}>
                         {renderCompletedTasks}
-                    </Form.Group>
-
+                    </div>
                     <InputGroup className="mb-3">
-                        <FormControl placeholder="New task description" aria-label="New task description" aria-describedby="basic-addon2" value={this.state.newTaskDescription}  onChange={this.onChangeTaskDescription}/>
+                        <FormControl placeholder="New task description" aria-label="New task description" aria-describedby="basic-addon2" value={this.state.newTaskDescription} onChange={this.onChangeTaskDescription} />
                         <InputGroup.Append>
                             <Button variant="outline-secondary" onClick={this.submitTask}>Add task</Button>
                         </InputGroup.Append>

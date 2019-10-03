@@ -20,14 +20,19 @@ function App() {
     <div className="App">
       <Router>
         <NavigationBar />
-        {localStorage.getItem('token') === "" ? (
+        {localStorage.getItem('token') === null ? (
           <Route path="/" exact component={LoginUser}/>
         ) : (
           <Route path="/" exact component={Projects}/>
         )}
+
+        {localStorage.getItem('token') === null ? (
+          <Route path="/projects" exact component={LoginUser}/>
+        ) : (
+          <Route path="/projects" exact component={Projects}/>
+        )}
         <Route path="/register" exact component={RegisterUser}/>
         <Route path="/login" exact component={LoginUser}/>
-        <Route path="/projects" exact component={Projects}/>
       </Router>
     </div>
   );
