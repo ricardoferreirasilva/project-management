@@ -1,9 +1,10 @@
 var mongoose = require('mongoose');
-var crypto = require('crypto');
-var jwt = require('jsonwebtoken');
+var Schema = mongoose.Schema;
 
 var ProjectSchema = new mongoose.Schema({
   name: {type: String, lowercase: true, required: [true, "can't be blank"], index: true, unique:true, minlength:3},
+  description: String,
+  tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }]
 }, {timestamps: true});
 
 

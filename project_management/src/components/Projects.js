@@ -11,7 +11,7 @@ class Projects extends Component {
 
         this.onChangeProjectName = this.onChangeProjectName.bind(this)
         this.onSubmit = this.onSubmit.bind(this);
-
+        this.getProjects = this.getProjects.bind(this);
 
         this.state = {
             projectName: "",
@@ -21,24 +21,33 @@ class Projects extends Component {
     onSubmit(event) {
         event.preventDefault()
         let projectName = this.state.projectName;
-        this.state.projectName = "";
+        this.setState({projectName:""})
         let token = localStorage.getItem("token");
-        axios.post("http://localhost:5000/projects/new", { token: token, projectName: this.state.projectName }).then((res) => {
-            this.getProjects();
+        axios.post("http://localhost:5000/projects/new",
+            {projectName: projectName },
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }).then((res) => {
+                this.getProjects();
 
-        }).catch((err) => {
-            console.log(err)
-            console.error("Could not create project.")
-        });
+            }).catch((err) => {
+                console.log(err)
+                console.error("Could not create project.")
+            });
     }
     onChangeProjectName(e) {
         this.setState({ projectName: e.target.value })
     }
     getProjects() {
         let token = localStorage.getItem("token");
-        axios.post("http://localhost:5000/projects", { token: token }).then((res) => {
+        axios.get("http://localhost:5000/projects",  {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).then((res) => {
             this.setState({ projects: res.data })
-            console.log(this.state.projects)
 
         }).catch((err) => {
             console.log(err)
@@ -56,11 +65,11 @@ class Projects extends Component {
         let rightColumn = this.state.projects.slice(halfWayThough, this.state.projects.length);
 
         const leftProjects = leftColumn.map((project, key) =>
-            <ProjectInfo key={project._id} name={project.name}></ProjectInfo>
+            <ProjectInfo key={project._id} project={project} getProjects={this.getProjects}></ProjectInfo>
         );
 
         const rightProjects = rightColumn.map((project, key) =>
-            <ProjectInfo key={project._id} name={project.name}></ProjectInfo>
+            <ProjectInfo key={project._id} project={project} getProjects={this.getProjects}></ProjectInfo>
         );
         const style = {
             backgroundColor: "#a2c8ec",
