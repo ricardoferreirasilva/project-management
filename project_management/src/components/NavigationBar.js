@@ -1,15 +1,31 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Navbar } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown,} from 'react-bootstrap';
 
 class NavigationBar extends Component {
-    componentDidMount(){
-    }
     render() {
         return (
-            <Navbar bg="dark" variant="dark">
-                <Navbar.Brand href="/">
-                </Navbar.Brand>
+            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                <Navbar.Brand href="#home">Manage Projects App</Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="mr-auto">
+
+                    </Nav>
+                    {localStorage.getItem('token') === "" ? (
+                        <Nav>
+                            <Nav.Link href="/register">Register</Nav.Link>
+                            <Nav.Link href="/login">Login</Nav.Link>
+                        </Nav>
+                        ) : (
+                            <Nav>
+                                <Navbar.Text style={{color: "white"}}>
+                                    Welcome {localStorage.getItem("user")}
+                                    </Navbar.Text>
+                                <Nav.Link href="/projects">Projects</Nav.Link>
+                        </Nav>
+                    )}
+                </Navbar.Collapse>
             </Navbar>
         );
     }
