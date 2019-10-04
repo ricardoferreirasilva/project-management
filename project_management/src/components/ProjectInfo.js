@@ -14,6 +14,7 @@ class ProjectInfo extends Component {
         this.submitTask = this.submitTask.bind(this);
         this.completeTask = this.completeTask.bind(this);
         this.removeTask = this.removeTask.bind(this);
+        this.removeProject = this.removeProject.bind(this);
         this.onChangeTaskDescription = this.onChangeTaskDescription.bind(this);
 
         this.state = {
@@ -60,9 +61,7 @@ class ProjectInfo extends Component {
             });
     }
     removeTask(event) {
-        console.log(event.currentTarget)
         let taskId = event.currentTarget.id;
-        console.log(taskId);
         let token = localStorage.getItem("token");
         axios.delete("http://127.0.0.1:5000/tasks/" + taskId + "/delete",
             {
@@ -75,6 +74,22 @@ class ProjectInfo extends Component {
             }).catch((err) => {
                 console.log(err)
                 console.error("Could not delete task.")
+            });
+    }
+    removeProject(event) {
+        let projectId = event.currentTarget.id;
+        let token = localStorage.getItem("token");
+        axios.delete("http://127.0.0.1:5000/projects/" + projectId + "/delete",
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }).then((res) => {
+                if (res.status === 200) this.props.getProjects();
+
+            }).catch((err) => {
+                console.log(err)
+                console.error("Could not delete project.")
             });
     }
     render() {
@@ -122,7 +137,7 @@ class ProjectInfo extends Component {
                 <Card.Body>
                     <Row>
                         <Col xs={10}>  <Card.Title >{this.props.project.name}</Card.Title></Col>
-                        <Col xs={2}>  <Button id={this.props.project._id} variant="outline-danger" size="sm" style={{ float: "right" }}><FontAwesomeIcon color="red" icon="trash-alt" /></Button></Col>
+                        <Col xs={2}>  <Button id={this.props.project._id} onClick={this.removeProject} variant="outline-danger" size="sm" style={{ float: "right" }}><FontAwesomeIcon color="red" icon="trash-alt" /></Button></Col>
                     </Row>
 
                    

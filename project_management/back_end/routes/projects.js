@@ -16,6 +16,16 @@ router.route("/").get(authenticateToken,(req, res) => {
   });
 });
 
+router.route("/:id/delete").delete(authenticateToken, (req, res) => {
+    let projectId = req.params.id;
+    Project.deleteOne({ _id: projectId }, function (err) {
+        if (err)  res.status(400).json("Error: " + err);
+        else res.sendStatus(200)
+      });
+});
+
+
+
 router.route("/new").post(authenticateToken,(req, res) => {
     let projectName = req.body.projectName;
     let project = new Project({name: projectName});
