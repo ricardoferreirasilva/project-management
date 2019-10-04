@@ -3,11 +3,14 @@ const router = require("express").Router()
 let User = require("../models/user.model");
 
 
+
+// Not secure and is only here for testing purposes.
 router.route("/").get((req, res) => {
-    User.find().then(users => res.json(users))
+    User.find({},'_id username').then(users => res.json(users))
         .catch(err => res.status(400).json("Error: " + err))
 });
 
+// Register a new user.
 router.route("/create").post((req, res) => {
     let username = req.body.username;
     let password = req.body.password;
@@ -20,6 +23,7 @@ router.route("/create").post((req, res) => {
         .catch(err => res.status(400).json("Error: " + err))
 });
 
+// Logins a user and returns his authtoken.
 router.route("/login").post((req, res) => {
     let name = req.body.username;
     let password = req.body.password;
