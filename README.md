@@ -16,7 +16,7 @@ Node is required to be installed in order to run this project.
 
 1. cd project_management/back_end
 2. npm install
-3. npm start 
+3. npm run prod 
 
 **Running the front end**
 
