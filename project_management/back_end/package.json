@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon",
+    "prod": "node index.js"
   },
-  "author": "",
+  "author": "Ricardo Ferreira da Silva",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

@@ -10,6 +10,7 @@ class ProjectInfo extends Component {
 
         this.submitTask = this.submitTask.bind(this);
         this.completeTask = this.completeTask.bind(this);
+        this.removeTask = this.removeTask.bind(this);
         this.onChangeTaskDescription = this.onChangeTaskDescription.bind(this);
 
         this.state = {
@@ -52,7 +53,23 @@ class ProjectInfo extends Component {
 
             }).catch((err) => {
                 console.log(err)
-                console.error("Could not create project.")
+                console.error("Could not complete task.")
+            });
+    }
+    removeTask(event){
+        let taskId = event.target.id;
+        let token = localStorage.getItem("token");
+        axios.delete("http://127.0.0.1:5000/tasks/" + taskId + "/delete",
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }).then((res) => {
+                if (res.status == 200) this.props.getProjects();
+
+            }).catch((err) => {
+                console.log(err)
+                console.error("Could not delete task.")
             });
     }
     render() {
@@ -89,7 +106,10 @@ class ProjectInfo extends Component {
         );
 
         const renderOngoingTasks = ongoingTasks.map((task, key) =>
-            <Form.Check id={task._id} key={task._id} type="checkbox" label={task.description} onChange={this.completeTask} />
+            <div key={task._id} style={{marginBottom:"15px"}}>
+                <Form.Check id={task._id} key={task._id} type="checkbox" label={task.description} onChange={this.completeTask} style = {{display: "inline-block",marginRight:"20px"}}/>
+                <Button  id={task._id} variant="outline-danger" size="sm" onClick={this.removeTask} style={{float: "right"}}>Remove</Button>
+            </div>
         );
 
         return (

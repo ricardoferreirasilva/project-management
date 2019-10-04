@@ -7,7 +7,7 @@ var authenticateToken = require("../middlewares/authentication")
 router.route("/create").post(authenticateToken, (req, res) => {
     let parentProjectId = req.body.projectId;
     let description = req.body.description;
-    let task = new Task({ description: description });
+    let task = new Task({ description: description, projectId:parentProjectId });
     task.save().then(() => {
         User.findOne({ token: res.locals.token })
             .populate({ path: "projects", match: { _id: parentProjectId }, limit: 1 }).exec(function (err, user) {
@@ -30,6 +30,15 @@ router.route("/:id/complete").post(authenticateToken, (req, res) => {
         task.save().then(()=>res.json(task));
     
     });
+});
+
+// TODO : Implement middleware on task to cascade delete on project.
+router.route("/:id/delete").delete(authenticateToken, (req, res) => {
+    let taskID = req.params.id;
+    Task.deleteOne({ _id: taskID }, function (err) {
+        if (err)  res.status(400).json("Error: " + err);
+        else res.sendStatus(200)
+      });
 });
 
 
