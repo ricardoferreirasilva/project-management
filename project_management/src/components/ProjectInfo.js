@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import moment from "moment"
 import axios from "axios"
+import { FontAwesomeIcon, } from '@fortawesome/react-fontawesome'
+import { faCheckSquare, faCoffee } from '@fortawesome/fontawesome-free-solid'
+
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, Button, Tooltip, Form, InputGroup, FormControl, OverlayTrigger } from 'react-bootstrap';
+import { Card, Button, Tooltip, Form, InputGroup, FormControl, OverlayTrigger,Container,Row,Col} from 'react-bootstrap';
 
 class ProjectInfo extends Component {
     constructor(props) {
@@ -56,8 +59,10 @@ class ProjectInfo extends Component {
                 console.error("Could not complete task.")
             });
     }
-    removeTask(event){
-        let taskId = event.target.id;
+    removeTask(event) {
+        console.log(event.currentTarget)
+        let taskId = event.currentTarget.id;
+        console.log(taskId);
         let token = localStorage.getItem("token");
         axios.delete("http://127.0.0.1:5000/tasks/" + taskId + "/delete",
             {
@@ -84,7 +89,7 @@ class ProjectInfo extends Component {
             color: 'grey',
             textDecorationLine: 'line-through',
             display: "inline-block",
-            marginRight:"50px"
+            marginRight: "50px"
         };
 
         let completedTasks = [], ongoingTasks = [];
@@ -106,16 +111,21 @@ class ProjectInfo extends Component {
         );
 
         const renderOngoingTasks = ongoingTasks.map((task, key) =>
-            <div key={task._id} style={{marginBottom:"15px"}}>
-                <Form.Check id={task._id} key={task._id} type="checkbox" label={task.description} onChange={this.completeTask} style = {{display: "inline-block",marginRight:"20px"}}/>
-                <Button  id={task._id} variant="outline-danger" size="sm" onClick={this.removeTask} style={{float: "right"}}>Remove</Button>
+            <div key={task._id} style={{ marginBottom: "15px" }}>
+                <Form.Check id={task._id} key={task._id} type="checkbox" label={task.description} onChange={this.completeTask} style={{ display: "inline-block", marginRight: "20px" }} />
+                <Button id={task._id} variant="outline-danger" size="sm" onClick={this.removeTask} style={{ float: "right" }}> <FontAwesomeIcon id={task._id} color="red" icon="times" />  </Button>
             </div>
         );
 
         return (
             <Card style={style}>
                 <Card.Body>
-                    <Card.Title>{this.props.project.name}</Card.Title>
+                    <Row>
+                        <Col xs={10}>  <Card.Title >{this.props.project.name}</Card.Title></Col>
+                        <Col xs={2}>  <Button id={this.props.project._id} variant="outline-danger" size="sm" style={{ float: "right" }}><FontAwesomeIcon color="red" icon="trash-alt" /></Button></Col>
+                    </Row>
+
+                   
                     <Card.Text>
                         {this.props.project.description}
                     </Card.Text>
