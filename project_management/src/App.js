@@ -1,6 +1,5 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from './logo.svg';
 import {BrowserRouter as Router,Route} from "react-router-dom";
 import './App.css';
 
@@ -10,8 +9,6 @@ import NavigationBar from "./components/NavigationBar"
 import RegisterUser from "./components/RegisterUser"
 import LoginUser from "./components/LoginUser"
 import Projects from "./components/Projects"
-
-import { Navbar } from 'react-bootstrap';
 
 
 function App() {

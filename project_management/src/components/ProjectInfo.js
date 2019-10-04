@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import moment from "moment"
 import axios from "axios"
 import { FontAwesomeIcon, } from '@fortawesome/react-fontawesome'
-import { faCheckSquare, faCoffee } from '@fortawesome/fontawesome-free-solid'
+import {} from '@fortawesome/fontawesome-free-solid'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, Button, Tooltip, Form, InputGroup, FormControl, OverlayTrigger,Container,Row,Col} from 'react-bootstrap';
+import { Card, Button, Tooltip, Form, InputGroup, FormControl, OverlayTrigger,Row,Col} from 'react-bootstrap';
 
 class ProjectInfo extends Component {
     constructor(props) {
@@ -34,7 +34,7 @@ class ProjectInfo extends Component {
                     'Authorization': 'Bearer ' + token
                 }
             }).then((res) => {
-                if (res.status == 200) this.props.getProjects();
+                if (res.status === 200) this.props.getProjects();
 
             }).catch((err) => {
                 console.log(err)
@@ -52,7 +52,7 @@ class ProjectInfo extends Component {
                     'Authorization': 'Bearer ' + token
                 }
             }).then((res) => {
-                if (res.status == 200) this.props.getProjects();
+                if (res.status === 200) this.props.getProjects();
 
             }).catch((err) => {
                 console.log(err)
@@ -70,7 +70,7 @@ class ProjectInfo extends Component {
                     'Authorization': 'Bearer ' + token
                 }
             }).then((res) => {
-                if (res.status == 200) this.props.getProjects();
+                if (res.status === 200) this.props.getProjects();
 
             }).catch((err) => {
                 console.log(err)
@@ -101,7 +101,7 @@ class ProjectInfo extends Component {
         const renderCompletedTasks = completedTasks.map((task, key) =>
             <OverlayTrigger key={task._id} placement={"right"}
                 overlay={
-                    <Tooltip id={`tooltip-${"right"}`} style="">
+                    <Tooltip id={`tooltip-${"right"}`} >
                         Finished on {moment(task.completionDate).format('YYYY-DD-MM')}.
                     </Tooltip>
                 }>
